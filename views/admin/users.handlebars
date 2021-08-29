@@ -36,19 +36,15 @@
       {{/if}}
 
       <td>
-        {{#if this.isAdmin}}
-        <button type="button" class="btn btn-link">
-          <a href="/admin/users/{{this.id}}/toggleAdmin">
+        <form action="/admin/users/{{this.id}}/toggleAdmin?_method=PUT" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-link">
+            {{#if this.isAdmin}}
             set as user
-          </a>
-        </button>
-        {{else}}
-        <button type="button" class="btn btn-link">
-          <a href="/admin/users/{{this.id}}/toggleAdmin">
+            {{else}}
             set as admin
-          </a>
-        </button>
-        {{/if}}
+            {{/if}}
+          </button>
+        </form>
       </td>
     </tr>
     {{/each}}
