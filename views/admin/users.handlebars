@@ -9,10 +9,6 @@
   </a>
 </div>
 
-<a href='/admin/restaurants/create'>
-  <button type="button" class="btn btn-primary">New Restaurant</button>
-</a>
-
 <br />
 <br />
 
@@ -21,28 +17,38 @@
     <tr>
       <th scope="col">#</th>
       <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Role</th>
       <th scope="col">#</th>
     </tr>
   </thead>
   <tbody>
-    {{#each restaurants}}
+    {{#each users}}
     <tr>
       <th scope="row">{{this.id}}</th>
       <td>{{this.name}}</td>
+      <td>{{this.email}}</td>
+
+      {{#if this.isAdmin}}
+      <td>admin</td>
+      {{else}}
+      <td>user</td>
+      {{/if}}
+
       <td>
+        {{#if this.isAdmin}}
         <button type="button" class="btn btn-link">
-          <a href="/admin/restaurants/{{this.id}}">
-            Show
+          <a href="/admin/users/{{this.id}}/toggleAdmin">
+            set as user
           </a>
         </button>
+        {{else}}
         <button type="button" class="btn btn-link">
-          <a href="/admin/restaurants/{{this.id}}/edit">
-            Edit
+          <a href="/admin/users/{{this.id}}/toggleAdmin">
+            set as admin
           </a>
         </button>
-        <form action="/admin/restaurants/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
-          <button type="submit" class="btn btn-link">Delete</button>
-        </form>
+        {{/if}}
       </td>
     </tr>
     {{/each}}
