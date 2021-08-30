@@ -43,7 +43,14 @@ const adminController = {
     })
   },
   createRestaurant: (req, res) => {
-    return res.render('admin/create')
+    Category.findAll({
+      raw: true,
+      nest: true
+    }).then(categories => {
+      return res.render('admin/create', {
+        categories: categories
+      })
+    })
   },
   postRestaurant: (req, res) => {
     if (!req.body.name) {
