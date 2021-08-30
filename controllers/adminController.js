@@ -13,9 +13,9 @@ const adminController = {
   },
   toggleAdmin: (req, res) => {
     return User.findByPk(req.params.id).then(user => {
-      user.isAdmin === false ? user.isAdmin = true : user.isAdmin = false
+      const userAdmin = user.isAdmin === false ? true : false
       return user.update({
-        isAdmin: user.isAdmin
+        isAdmin: userAdmin
       })
         .then((user) => {
           req.flash('success_messages', "Role updated!")
