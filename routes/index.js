@@ -1,3 +1,5 @@
+const helpers = require('../_helpers')
+
 const multer = require('multer')
 const upload = multer({ dest: 'temp/' })
 
@@ -7,14 +9,14 @@ const userController = require('../controllers/userController.js')
 
 module.exports = (app, passport) => {
   const authenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
+    if (helpers.ensureAuthenticated(req)) {
       return next()
     }
     res.redirect('/signin')
   }
   const authenticatedAdmin = (req, res, next) => {
-    if (req.isAuthenticated()) {
-      if (req.user.isAdmin) { return next() }
+    if (helpers.ensureAuthenticated(req)) {
+      if (helpers.getUser(req).isAdmin) { return next() }
       return res.redirect('/')
     }
     res.redirect('/signin')
@@ -24,6 +26,10 @@ module.exports = (app, passport) => {
   app.get('/restaurants', authenticated, restController.getRestaurants)
 
   app.get('/admin', authenticatedAdmin, (req, res) => res.redirect('/admin/restaurants'))
+
+  app.get('/admin/users', authenticatedAdmin, adminController.getUsers)
+  app.put('/admin/users/:id/toggleAdmin', authenticatedAdmin, adminController.toggleAdmin)
+
   app.get('/admin/restaurants', authenticatedAdmin, adminController.getRestaurants)
   app.get('/admin/restaurants/create', authenticatedAdmin, adminController.createRestaurant)
   app.get('/admin/restaurants/:id', authenticatedAdmin, adminController.getRestaurant)
