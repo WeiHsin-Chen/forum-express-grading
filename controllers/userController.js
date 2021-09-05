@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 const fs = require('fs')
 const helpers = require('../_helpers')
 const imgur = require('imgur-node-api')
@@ -51,11 +53,29 @@ const userController = {
       req.flash('error_messages', '無法瀏覽其他使用者的資料')
       return res.redirect(`/users/${req.user.id}`)
     }
-    User.findByPk(req.params.id
-    ).then(user => {
-      return res.render('profile', {
-        user: user.toJSON()
-      })
+
+    Comment.findAndCountAll({
+      include: [
+        User,
+        Restaurant
+      ],
+      where: { userId: req.params.id }
+    }).then(result => {
+      const totalComment = Number(result.count)
+      console.log(totalComment)
+      const data = result.rows.map(comment => ({
+        ...comment,
+        restaurantId: comment.Restaurant.id,
+        restaurantImage: comment.Restaurant.image
+      }))
+      User.findByPk(req.params.id)
+        .then(user => {
+          return res.render('profile', {
+            user: user.toJSON(),
+            totalComment: totalComment,
+            restaurants: data
+          })
+        })
     })
       .catch(err => console.log(err))
   },
