@@ -57,6 +57,13 @@ const restController = {
         { model: Comment, include: [User] }
       ]
     }).then(restaurant => {
+      if (!restaurant.viewCount) {
+        restaurant.viewCount = 1
+        restaurant.save()
+      } else {
+        restaurant.viewCount += 1
+        restaurant.save()
+      }
       return res.render('restaurant', {
         restaurant: restaurant.toJSON(),
       })
@@ -70,9 +77,11 @@ const restController = {
       ]
     }).then(restaurant => {
       const commentCount = restaurant.dataValues.Comments.length
+      const viewCount = restaurant.viewCount
       return res.render('restaurantDashboard', {
         restaurant: restaurant.toJSON(),
-        commentCount: commentCount
+        commentCount: commentCount,
+        viewCount: viewCount
       })
     })
   },
