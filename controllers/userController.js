@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
 const fs = require('fs')
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 const User = db.User
 
 
@@ -82,7 +84,7 @@ const userController = {
             .then((user) => {
               user.update({
                 name: req.body.name,
-                image: file ? `/upload/${file.originalname}` : user.image
+                image: file ? img.data.link : user.image
               }).then((user) => {
                 req.flash('success_messages', 'user was successfully to update')
                 res.redirect(`/users/${req.params.id}`)
