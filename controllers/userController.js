@@ -49,11 +49,6 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res) => {
-    if (helpers.getUser(req).id !== Number(req.params.id)) {
-      req.flash('error_messages', '無法瀏覽其他使用者的資料')
-      return res.redirect(`/users/${req.user.id}`)
-    }
-
     Comment.findAndCountAll({
       include: [
         User,
