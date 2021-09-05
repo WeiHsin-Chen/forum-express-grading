@@ -1,9 +1,11 @@
 const bcrypt = require('bcryptjs')
 const db = require('../models')
+const User = db.User
 const fs = require('fs')
+const helpers = require('../_helpers')
 const imgur = require('imgur-node-api')
 const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
-const User = db.User
+
 
 
 const userController = {
@@ -45,11 +47,11 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res) => {
-    if (req.params.id !== String(req.user.id)) {
+    if (helpers.getUser(req).id !== Number(req.params.id)) {
       req.flash('error_messages', '無法瀏覽其他使用者的資料')
       return res.redirect(`/users/${req.user.id}`)
     }
-    return User.findByPk(req.params.id
+    User.findByPk(req.params.id
     ).then(user => {
       return res.render('profile', {
         user: user.toJSON()
@@ -58,11 +60,11 @@ const userController = {
       .catch(err => console.log(err))
   },
   editUser: (req, res) => {
-    if (req.params.id !== String(req.user.id)) {
+    if (helpers.getUser(req).id !== Number(req.params.id)) {
       req.flash('error_messages', '無法編輯其他使用者的資料')
       return res.redirect(`/users/${req.user.id}`)
     }
-    return User.findByPk(req.params.id
+    User.findByPk(req.params.id
     ).then(user => {
       return res.render('profileEdit', {
         user: user.toJSON()
