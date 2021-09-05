@@ -77,21 +77,19 @@ const userController = {
     }
     const { file } = req
     if (file) {
-      fs.readFile(file.path, (err, data) => {
-        if (err) console.log('Error:', err)
-        fs.writeFile(`upload/${file.originalname}`, data, () => {
-          return User.findByPk(req.params.id)
-            .then((user) => {
-              user.update({
-                name: req.body.name,
-                image: file ? img.data.link : user.image
-              }).then((user) => {
-                req.flash('success_messages', 'user was successfully to update')
-                res.redirect(`/users/${req.params.id}`)
-              })
-                .catch(err => console.log(err))
+      imgur.setClientID(IMGUR_CLIENT_ID);
+      imgur.upload(file.path, (err, img) => {
+        return User.findByPk(req.params.id)
+          .then((user) => {
+            user.update({
+              name: req.body.name,
+              image: file ? img.data.link : user.image
+            }).then((user) => {
+              req.flash('success_messages', 'user was successfully to update')
+              res.redirect(`/users/${req.params.id}`)
             })
-        })
+              .catch(err => console.log(err))
+          })
       })
     }
     else {
