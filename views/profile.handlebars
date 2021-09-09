@@ -8,9 +8,13 @@
       <h1>{{user.name}}</h1>
       <p>{{user.email}}</p>
       <p class="card-text">{{totalComment}} 已評論餐廳</p>
+
+      {{#if isUser}}
       <a href='/users/{{user.id}}/edit'>
         <button type="button" class="btn btn-primary">Edit</button>
       </a>
+      {{/if}}
+
     </div>
   </div>
 </div>
