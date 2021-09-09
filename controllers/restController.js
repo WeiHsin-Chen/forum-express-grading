@@ -60,16 +60,14 @@ const restController = {
         { model: User, as: 'LikedUsers' },
         { model: Comment, include: [User] }
       ]
-    }).then(restaurant => {
+    }).then(async restaurant => {
       const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
       const isLiked = restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
-      if (!restaurant.viewCount) {
-        restaurant.viewCount = 1
-        restaurant.save()
-      } else {
-        restaurant.viewCount += 1
-        restaurant.save()
-      }
+      restaurant.viewCount = Number(restaurant.viewCount)
+
+      restaurant.viewCount = await restaurant.increment('viewCount')
+
+      restaurant.save()
       return res.render('restaurant', {
         restaurant: restaurant.toJSON(),
         isFavorited: isFavorited,
