@@ -22,9 +22,7 @@ const adminService = {
     }).then(restaurant => {
       callback({ restaurant: restaurant.toJSON() })
     })
-  },
-
-
+  }
 }
 
 module.exports = adminService
