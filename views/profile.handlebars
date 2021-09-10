@@ -9,7 +9,7 @@
       <p>{{user.email}}</p>
       <p class="card-text">{{totalComment}} 已評論餐廳</p>
 
-      {{#if isUser}}
+      {{#if isCurrentUser}}
       <a href='/users/{{user.id}}/edit'>
         <button type="button" class="btn btn-primary">Edit</button>
       </a>

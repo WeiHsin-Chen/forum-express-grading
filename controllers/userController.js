@@ -52,7 +52,7 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: (req, res) => {
-    const isUser = helpers.getUser(req).id === Number(req.params.id)
+    const isCurrentUser = helpers.getUser(req).id === Number(req.params.id)
     Comment.findAndCountAll({
       include: [
         User,
@@ -73,7 +73,7 @@ const userController = {
             user: user.toJSON(),
             totalComment: totalComment,
             restaurants: data,
-            isUser: isUser
+            isCurrentUser: isCurrentUser
           })
         })
     })
